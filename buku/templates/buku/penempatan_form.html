@@ -1,0 +1,74 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Tambah Buku ke Rak - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-list' %}">Rak</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-detail' rak.slug %}">{{ rak.nama_rak }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tambah Buku</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">
+                    <i class="fas fa-plus-circle me-2"></i>Tambah Buku ke Rak
+                </h2>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Simpan
+                        </button>
+                        <a href="{% url 'rak-detail' rak.slug %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Informasi
+                </h5>
+                <div class="mt-3">
+                    <p class="mb-2"><strong>Rak:</strong> {{ rak.nama_rak }}</p>
+                    <p class="mb-2"><strong>Lokasi:</strong> {{ rak.lokasi_rak }}</p>
+                    <p class="mb-2"><strong>Kapasitas:</strong> {{ rak.kapasitas }} buku</p>
+                    <p class="mb-2"><strong>Jumlah Buku Saat Ini:</strong> {{ rak.jumlah_buku }}</p>
+                    <p class="mb-0"><strong>Sisa Kapasitas:</strong> {{ rak.sisa_kapasitas }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-lightbulb me-2"></i>Tips
+                </h5>
+                <ul class="mb-0">
+                    <li>Pilih buku yang belum ada di rak ini</li>
+                    <li>Pastikan masih ada kapasitas tersedia</li>
+                    <li>Buku yang sudah dipilih tidak akan muncul dalam daftar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

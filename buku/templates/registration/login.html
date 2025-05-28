@@ -1,0 +1,59 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title h2 text-center mb-4">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </h1>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Username atau password salah. Silakan coba lagi.
+                    </div>
+                {% endif %}
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Akun Anda tidak memiliki akses ke halaman ini. 
+                            Silakan login dengan akun yang memiliki akses.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> 
+                            Silakan login untuk mengakses halaman ini.
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        <i class="fas fa-info-circle"></i> 
+                        Untuk akses admin, silakan hubungi administrator sistem.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

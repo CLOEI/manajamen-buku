@@ -1,0 +1,106 @@
+{% extends 'buku/base.html' %}
+
+{% block title %}Beranda - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4 mb-4">Selamat Datang di Sistem Manajemen Koleksi Buku</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-book"></i> Total Buku
+                </h5>
+                <p class="card-text display-6">{{ total_buku }}</p>
+                <a href="{% url 'buku-list' %}" class="btn btn-light">Lihat Buku</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-user-edit"></i> Total Penulis
+                </h5>
+                <p class="card-text display-6">{{ total_penulis }}</p>
+                <a href="{% url 'penulis-list' %}" class="btn btn-light">Lihat Penulis</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-building"></i> Total Penerbit
+                </h5>
+                <p class="card-text display-6">{{ total_penerbit }}</p>
+                <a href="{% url 'penerbit-list' %}" class="btn btn-light">Lihat Penerbit</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-shelf"></i> Total Rak
+                </h5>
+                <p class="card-text display-6">{{ total_rak }}</p>
+                <a href="{% url 'rak-list' %}" class="btn btn-light">Lihat Rak</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock"></i> Buku Terbaru
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if buku_terbaru %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    <th>Penulis</th>
+                                    <th>Penerbit</th>
+                                    <th>Tahun</th>
+                                    <th>Genre</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for buku in buku_terbaru %}
+                                    <tr>
+                                        <td>{{ buku.judul }}</td>
+                                        <td>{{ buku.penulis }}</td>
+                                        <td>{{ buku.penerbit }}</td>
+                                        <td>{{ buku.tahun_terbit }}</td>
+                                        <td>{{ buku.get_genre_display }}</td>
+                                        <td>
+                                            <a href="{% url 'buku-detail' buku.slug %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Belum ada buku yang ditambahkan.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

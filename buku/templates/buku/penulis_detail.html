@@ -1,0 +1,119 @@
+{% extends 'buku/base.html' %}
+
+{% block title %}{{ penulis.nama_depan }} {{ penulis.nama_belakang }} - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'penulis-list' %}">Penulis</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ penulis.nama_depan }} {{ penulis.nama_belakang }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated %}
+            <div class="btn-group">
+                <a href="{% url 'penulis-update' penulis.slug %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'penulis-delete' penulis.slug %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Hapus
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title h2 mb-4">
+                    {{ penulis.nama_depan }} {{ penulis.nama_belakang }}
+                </h1>
+                
+                <table class="table table-sm">
+                    {% if penulis.tanggal_lahir %}
+                        <tr>
+                            <th style="width: 150px;">Tanggal Lahir</th>
+                            <td>{{ penulis.tanggal_lahir|date:"d M Y" }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if penulis.asal_negara %}
+                        <tr>
+                            <th>Asal Negara</th>
+                            <td>{{ penulis.asal_negara }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th>Jumlah Buku</th>
+                        <td>{{ penulis.buku.count }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-book"></i> Karya
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if penulis.buku.all %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    <th>Penerbit</th>
+                                    <th>Tahun</th>
+                                    <th>Genre</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for buku in penulis.buku.all %}
+                                    <tr>
+                                        <td>{{ buku.judul }}</td>
+                                        <td>{{ buku.penerbit }}</td>
+                                        <td>{{ buku.tahun_terbit }}</td>
+                                        <td>{{ buku.get_genre_display }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{% url 'buku-detail' buku.slug %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url 'buku-update' buku.slug %}" class="btn btn-sm btn-warning">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'buku-delete' buku.slug %}" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Belum ada buku yang ditambahkan untuk penulis ini.</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'buku-create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Tambah Buku
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

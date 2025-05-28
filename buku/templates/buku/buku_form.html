@@ -1,0 +1,125 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Edit {{ form.instance.judul }} - Sistem Manajemen Koleksi Buku
+    {% else %}
+        Tambah Buku Baru - Sistem Manajemen Koleksi Buku
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'buku-list' %}">Buku</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {% if form.instance.pk %}
+                        Edit {{ form.instance.judul }}
+                    {% else %}
+                        Tambah Buku Baru
+                    {% endif %}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title h2 mb-4">
+                    {% if form.instance.pk %}
+                        <i class="fas fa-edit"></i> Edit Buku
+                    {% else %}
+                        <i class="fas fa-plus"></i> Tambah Buku Baru
+                    {% endif %}
+                </h1>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            {{ form.judul|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.penulis|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.penerbit|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.tahun_terbit|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.genre|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.jumlah_halaman|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            {{ form.sinopsis|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'buku-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}
+                                <i class="fas fa-save"></i> Simpan Perubahan
+                            {% else %}
+                                <i class="fas fa-plus"></i> Tambah Buku
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> Informasi
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    {% if form.instance.pk %}
+                        Anda sedang mengedit buku yang sudah ada. Pastikan semua informasi yang diubah sudah benar.
+                    {% else %}
+                        Tambahkan buku baru ke dalam koleksi Anda. Isi semua informasi yang diperlukan dengan lengkap.
+                    {% endif %}
+                </p>
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb"></i> Tips:
+                    <ul class="mb-0 mt-2">
+                        <li>Pastikan judul buku sudah benar</li>
+                        <li>Pilih penulis dan penerbit yang sesuai</li>
+                        <li>Isi tahun terbit dengan benar</li>
+                        <li>Pilih genre yang sesuai</li>
+                        <li>Tambahkan sinopsis jika diperlukan</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

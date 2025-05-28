@@ -1,0 +1,30 @@
+{% extends 'buku/base.html' %}
+
+{% block title %}Logout - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title h2 mb-4">
+                    <i class="fas fa-sign-out-alt"></i> Logout Berhasil
+                </h1>
+
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> 
+                    Anda telah berhasil logout dari sistem.
+                </div>
+
+                <p class="text-muted mb-4">
+                    Terima kasih telah menggunakan Sistem Manajemen Koleksi Buku.
+                </p>
+
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login Kembali
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

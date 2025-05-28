@@ -1,0 +1,71 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if object %}Edit Rak{% else %}Tambah Rak Baru{% endif %} - Sistem Manajemen Koleksi Buku
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-list' %}">Rak</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {% if object %}Edit Rak{% else %}Tambah Rak Baru{% endif %}
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Form Card -->
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">
+                    {% if object %}
+                        <i class="fas fa-edit me-2"></i>Edit Rak
+                    {% else %}
+                        <i class="fas fa-plus me-2"></i>Tambah Rak Baru
+                    {% endif %}
+                </h2>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Simpan
+                        </button>
+                        <a href="{% url 'rak-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Sidebar -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Informasi
+                </h5>
+                <div class="card-text">
+                    <p>Form ini digunakan untuk {% if object %}mengedit{% else %}menambahkan{% endif %} rak buku baru ke dalam sistem.</p>
+                    <p>Pastikan untuk mengisi semua field yang diperlukan dengan informasi yang akurat.</p>
+                    
+                    <h6 class="mt-4">Tips:</h6>
+                    <ul class="mb-0">
+                        <li>Nama rak harus unik dan mudah diidentifikasi</li>
+                        <li>Deskripsi dapat berisi informasi tambahan seperti lokasi atau kategori buku</li>
+                        <li>Kapasitas menunjukkan jumlah maksimum buku yang dapat ditampung</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

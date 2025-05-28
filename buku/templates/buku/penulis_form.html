@@ -1,0 +1,85 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if object %}
+        Edit Penulis - {{ object.nama_depan }} {{ object.nama_belakang }}
+    {% else %}
+        Tambah Penulis Baru
+    {% endif %}
+    - Sistem Manajemen Koleksi Buku
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'penulis-list' %}">Penulis</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {% if object %}
+                        Edit {{ object.nama_depan }} {{ object.nama_belakang }}
+                    {% else %}
+                        Tambah Penulis Baru
+                    {% endif %}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title h2 mb-4">
+                    {% if object %}
+                        <i class="fas fa-user-edit"></i> Edit Penulis
+                    {% else %}
+                        <i class="fas fa-user-plus"></i> Tambah Penulis Baru
+                    {% endif %}
+                </h1>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                        <a href="{% url 'penulis-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle"></i> Informasi
+                </h5>
+                <p class="card-text">
+                    {% if object %}
+                        Anda sedang mengedit data penulis. Pastikan semua informasi yang dimasukkan sudah benar.
+                    {% else %}
+                        Tambahkan data penulis baru ke dalam sistem. Semua field yang ditandai dengan tanda bintang (*) wajib diisi.
+                    {% endif %}
+                </p>
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb"></i> Tips:
+                    <ul class="mb-0 mt-2">
+                        <li>Nama depan dan belakang akan digunakan untuk menampilkan nama penulis</li>
+                        <li>Tanggal lahir digunakan untuk informasi biografi penulis</li>
+                        <li>Negara asal membantu dalam mengkategorikan penulis berdasarkan wilayah</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

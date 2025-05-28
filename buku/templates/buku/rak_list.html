@@ -1,0 +1,152 @@
+{% extends 'buku/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Daftar Rak - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="fas fa-shelf me-2"></i>Daftar Rak</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated %}
+            <a href="{% url 'rak-create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Tambah Rak Baru
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Cari rak..." value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Cari
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Rak List -->
+<div class="card">
+    <div class="card-body">
+        {% if rak_list %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama Rak</th>
+                            <th>Lokasi</th>
+                            <th class="text-center">Kapasitas</th>
+                            <th class="text-center">Jumlah Buku</th>
+                            <th class="text-center">Sisa Kapasitas</th>
+                            <th class="text-end">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rak in rak_list %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'rak-detail' rak.slug %}" class="text-decoration-none">
+                                        {{ rak.nama_rak }}
+                                    </a>
+                                </td>
+                                <td>{{ rak.lokasi_rak }}</td>
+                                <td class="text-center">{{ rak.kapasitas }}</td>
+                                <td class="text-center">{{ rak.jumlah_buku }}</td>
+                                <td class="text-center">
+                                    {% with sisa=rak.sisa_kapasitas %}
+                                        {% if sisa <= 0 %}
+                                            <span class="badge bg-danger">Penuh</span>
+                                        {% elif sisa <= 10 %}
+                                            <span class="badge bg-warning">{{ sisa }}</span>
+                                        {% else %}
+                                            <span class="badge bg-success">{{ sisa }}</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group">
+                                        <a href="{% url 'rak-detail' rak.slug %}" class="btn btn-sm btn-info" title="Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if user.is_authenticated %}
+                                            <a href="{% url 'rak-update' rak.slug %}" class="btn btn-sm btn-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'rak-delete' rak.slug %}" class="btn btn-sm btn-danger" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-shelf fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Tidak ada rak ditemukan</h5>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'rak-create' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus me-1"></i>Tambah Rak Baru
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

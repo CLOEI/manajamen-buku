@@ -1,0 +1,84 @@
+{% extends 'buku/base.html' %}
+
+{% block title %}Hapus Penempatan Buku - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-list' %}">Rak</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-detail' object.rak.slug %}">{{ object.rak.nama_rak }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Hapus Penempatan</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">
+                    <i class="fas fa-trash-alt me-2"></i>Hapus Penempatan Buku
+                </h2>
+
+                <div class="alert alert-danger">
+                    <h5 class="alert-heading">Konfirmasi Penghapusan</h5>
+                    <p class="mb-0">Apakah Anda yakin ingin menghapus penempatan buku ini?</p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Detail Penempatan</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th style="width: 150px;">Buku</th>
+                                <td>{{ object.buku.judul }}</td>
+                            </tr>
+                            <tr>
+                                <th>Rak</th>
+                                <td>{{ object.rak.nama_rak }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Ditempatkan</th>
+                                <td>{{ object.tanggal_ditambahkan|date:"d M Y" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Hapus
+                        </button>
+                        <a href="{% url 'rak-detail' object.rak.slug %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Perhatian
+                </h5>
+                <p class="card-text">
+                    Menghapus penempatan buku ini hanya akan menghapus informasi tentang di mana buku ini ditempatkan.
+                    Buku dan rak tidak akan dihapus dari sistem.
+                </p>
+                <p class="card-text mb-0">
+                    Anda dapat menambahkan kembali buku ini ke rak yang sama atau rak lain kapan saja.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

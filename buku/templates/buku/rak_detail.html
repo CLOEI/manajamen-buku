@@ -1,0 +1,135 @@
+{% extends 'buku/base.html' %}
+{% load buku_extras %}
+
+{% block title %}{{ rak.nama_rak }} - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'rak-list' %}">Rak</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ rak.nama_rak }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated %}
+            <div class="btn-group">
+                <a href="{% url 'rak-update' rak.slug %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'rak-delete' rak.slug %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Hapus
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title h2 mb-4">
+                    {{ rak.nama_rak }}
+                </h1>
+                
+                <table class="table table-sm">
+                    <tr>
+                        <th style="width: 150px;">Lokasi</th>
+                        <td>{{ rak.lokasi_rak }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kapasitas</th>
+                        <td>{{ rak.kapasitas }} buku</td>
+                    </tr>
+                    <tr>
+                        <th>Jumlah Buku</th>
+                        <td>{{ rak.jumlah_buku }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            {% if rak.sisa_kapasitas <= 0 %}
+                                <span class="badge bg-danger">Penuh</span>
+                            {% elif rak.sisa_kapasitas <= 10 %}
+                                <span class="badge bg-warning">Hampir Penuh</span>
+                            {% else %}
+                                <span class="badge bg-success">Tersedia</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                {% if rak.keterangan %}
+                    <div class="mt-4">
+                        <h5 class="card-title">Keterangan</h5>
+                        <p class="card-text">{{ rak.keterangan }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-book"></i> Buku di Rak Ini
+                </h5>
+                {% if user.is_authenticated and rak.sisa_kapasitas > 0 %}
+                    <a href="{% url 'penempatan-create' rak_slug=rak.slug %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Tambah Buku
+                    </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if rak.penempatan.all %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    <th>Penulis</th>
+                                    <th>Tanggal Ditempatkan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for penempatan in rak.penempatan.all %}
+                                    <tr>
+                                        <td>{{ penempatan.buku.judul }}</td>
+                                        <td>{{ penempatan.buku.penulis.nama_depan }} {{ penempatan.buku.penulis.nama_belakang }}</td>
+                                        <td>{{ penempatan.tanggal_ditambahkan|date:"d M Y" }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{% url 'buku-detail' penempatan.buku.slug %}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url 'penempatan-delete' penempatan.id %}" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Belum ada buku yang ditempatkan di rak ini.</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'penempatan-create' rak_slug=rak.slug %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Tambah Buku
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
