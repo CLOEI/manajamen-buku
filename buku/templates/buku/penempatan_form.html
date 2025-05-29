@@ -10,7 +10,9 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'rak-list' %}">Rak</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'rak-detail' rak.slug %}">{{ rak.nama_rak }}</a></li>
+                {% if rak %}
+                    <li class="breadcrumb-item"><a href="{% url 'rak-detail' rak.slug %}">{{ rak.nama_rak }}</a></li>
+                {% endif %}
                 <li class="breadcrumb-item active" aria-current="page">Tambah Buku</li>
             </ol>
         </nav>
@@ -32,9 +34,15 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i>Simpan
                         </button>
-                        <a href="{% url 'rak-detail' rak.slug %}" class="btn btn-secondary">
-                            <i class="fas fa-times me-1"></i>Batal
-                        </a>
+                        {% if rak %}
+                            <a href="{% url 'rak-detail' rak.slug %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Batal
+                            </a>
+                        {% else %}
+                            <a href="{% url 'buku-detail' buku.slug %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Batal
+                            </a>
+                        {% endif %}
                     </div>
                 </form>
             </div>
@@ -48,11 +56,17 @@
                     <i class="fas fa-info-circle me-2"></i>Informasi
                 </h5>
                 <div class="mt-3">
-                    <p class="mb-2"><strong>Rak:</strong> {{ rak.nama_rak }}</p>
-                    <p class="mb-2"><strong>Lokasi:</strong> {{ rak.lokasi_rak }}</p>
-                    <p class="mb-2"><strong>Kapasitas:</strong> {{ rak.kapasitas }} buku</p>
-                    <p class="mb-2"><strong>Jumlah Buku Saat Ini:</strong> {{ rak.jumlah_buku }}</p>
-                    <p class="mb-0"><strong>Sisa Kapasitas:</strong> {{ rak.sisa_kapasitas }}</p>
+                    {% if rak %}
+                        <p class="mb-2"><strong>Rak:</strong> {{ rak.nama_rak }}</p>
+                        <p class="mb-2"><strong>Lokasi:</strong> {{ rak.lokasi_rak }}</p>
+                        <p class="mb-2"><strong>Kapasitas:</strong> {{ rak.kapasitas }} buku</p>
+                        <p class="mb-2"><strong>Jumlah Buku Saat Ini:</strong> {{ rak.jumlah_buku }}</p>
+                        <p class="mb-0"><strong>Sisa Kapasitas:</strong> {{ rak.sisa_kapasitas }}</p>
+                    {% else %}
+                        <p class="mb-2"><strong>Buku:</strong> {{ buku.judul }}</p>
+                        <p class="mb-2"><strong>Penulis:</strong> {{ buku.penulis.nama_depan }} {{ buku.penulis.nama_belakang }}</p>
+                        <p class="mb-0">Silakan pilih rak dari daftar di sebelah kiri untuk menempatkan buku ini.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -63,9 +77,9 @@
                     <i class="fas fa-lightbulb me-2"></i>Tips
                 </h5>
                 <ul class="mb-0">
-                    <li>Pilih buku yang belum ada di rak ini</li>
-                    <li>Pastikan masih ada kapasitas tersedia</li>
-                    <li>Buku yang sudah dipilih tidak akan muncul dalam daftar</li>
+                    <li>Pilih rak yang masih memiliki kapasitas tersedia</li>
+                    <li>Buku yang sudah ada di rak tidak akan muncul dalam daftar</li>
+                    <li>Pastikan lokasi rak sesuai dengan kategori buku</li>
                 </ul>
             </div>
         </div>

@@ -245,7 +245,21 @@ def tambah_penempatan(request, buku_id):
             return redirect('buku-detail', slug=buku.slug)
     else:
         form = PenempatanBukuForm()
-    return render(request, 'buku/penempatan_form.html', {'form': form, 'buku': buku})
+        # Get all racks that don't have this book
+        available_racks = RakBuku.objects.exclude(buku=buku)
+        # Filter racks that have available capacity
+        racks_with_capacity = [
+            rak for rak in available_racks 
+            if rak.jumlah_buku < rak.kapasitas
+        ]
+        form.fields['rak'].queryset = RakBuku.objects.filter(
+            id__in=[rak.id for rak in racks_with_capacity]
+        )
+    return render(request, 'buku/penempatan_form.html', {
+        'form': form, 
+        'buku': buku,
+        'rak': form.fields['rak'].queryset.first() if form.fields['rak'].queryset.exists() else None
+    })
 
 @login_required
 def hapus_penempatan(request, penempatan_id):

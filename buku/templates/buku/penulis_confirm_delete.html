@@ -1,0 +1,109 @@
+{% extends 'buku/base.html' %}
+
+{% block title %}Hapus {{ object.nama_depan }} {{ object.nama_belakang }} - Sistem Manajemen Koleksi Buku{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'penulis-list' %}">Penulis</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'penulis-detail' object.slug %}">{{ object.nama_depan }} {{ object.nama_belakang }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Hapus</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title h2 mb-4">
+                    <i class="fas fa-trash text-danger"></i> Hapus Penulis
+                </h1>
+
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i> Peringatan!
+                    </h4>
+                    <p>Anda yakin ingin menghapus penulis "{{ object.nama_depan }} {{ object.nama_belakang }}"?</p>
+                    <hr>
+                    <p class="mb-0">
+                        Tindakan ini tidak dapat dibatalkan. Semua data terkait penulis ini akan dihapus secara permanen.
+                    </p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Detail Penulis yang Akan Dihapus</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tr>
+                                <th style="width: 150px;">Nama Depan</th>
+                                <td>{{ object.nama_depan }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nama Belakang</th>
+                                <td>{{ object.nama_belakang }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Lahir</th>
+                                <td>{{ object.tanggal_lahir|date:"d F Y"|default:"-" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Asal Negara</th>
+                                <td>{{ object.asal_negara|default:"-" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'penulis-detail' object.slug %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Ya, Hapus Penulis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> Informasi
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Menghapus penulis akan menghapus:
+                </p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <i class="fas fa-check text-danger"></i> Data penulis
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-check text-danger"></i> Referensi penulis di buku-buku terkait
+                    </li>
+                </ul>
+                <div class="alert alert-warning">
+                    <i class="fas fa-lightbulb"></i> Tips:
+                    <p class="mb-0 mt-2">
+                        Jika Anda tidak yakin, lebih baik untuk tidak menghapus penulis ini. 
+                        Anda selalu dapat mengedit informasi penulis jika diperlukan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
